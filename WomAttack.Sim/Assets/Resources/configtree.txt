@@ -1,0 +1,47 @@
+### Layer 0
+
+Internet
+
+### Layer 1
+
+Router 1 (подключён к Internet)
+
+### Layer 2
+
+3 дочерних узла:
+
+слева направо
+
+Router 2
+Switch 1
+Switch 2
+
+### Layer 3
+
+Switch 1 → 5 PC
+PC01
+PC02
+PC03
+PC04
+PC05
+
+Switch 2 → 4 PC
+PC06
+PC07
+PC08
+PC09
+
+Router 2 → Switch 3
+
+### Layer 4
+
+Switch 3 → 8 PC
+
+PC10
+PC11
+PC12
+PC13
+PC14
+PC15
+PC16
+PC17
