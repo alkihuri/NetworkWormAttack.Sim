@@ -2,41 +2,35 @@ using UnityEngine;
 
 public static class NetworkConfigBuilder
 {
+    static NodeConfig Node(string id, NodeType type) =>
+        new NodeConfig { id = id, type = type };
+
+    static NodeConfig PC(int index) =>
+        Node($"PC{index:D2}", NodeType.PC);
+
     public static NetworkConfig BuildDefault()
     {
-        var config = ScriptableObject.CreateInstance<NetworkConfig>();
+        var internet = Node("Internet", NodeType.Internet);
 
-        // Layer 0: Internet
-        var internet = new NodeConfig { id = "Internet", type = NodeType.Internet };
-
-        // Layer 1: Router 1
-        var router1 = new NodeConfig { id = "Router1", type = NodeType.Router };
+        var router1 = Node("Router 1", NodeType.Router);
         internet.children.Add(router1);
 
-        // Layer 2: Router 2, Switch 1, Switch 2
-        var router2 = new NodeConfig { id = "Router2", type = NodeType.Router };
-        var switch1 = new NodeConfig { id = "Switch1", type = NodeType.Switch };
-        var switch2 = new NodeConfig { id = "Switch2", type = NodeType.Switch };
+        var router2 = Node("Router 2", NodeType.Router);
+        var switch1 = Node("Switch 1", NodeType.Switch);
+        var switch2 = Node("Switch 2", NodeType.Switch);
         router1.children.Add(router2);
         router1.children.Add(switch1);
         router1.children.Add(switch2);
 
-        // Layer 3: Switch 1 -> 5 PCs
-        for (int i = 1; i <= 5; i++)
-            switch1.children.Add(new NodeConfig { id = $"PC{i:D2}", type = NodeType.PC });
+        for (int i = 1; i <= 5; i++)  switch1.children.Add(PC(i));
+        for (int i = 6; i <= 9; i++)  switch2.children.Add(PC(i));
 
-        // Layer 3: Switch 2 -> 4 PCs
-        for (int i = 6; i <= 9; i++)
-            switch2.children.Add(new NodeConfig { id = $"PC{i:D2}", type = NodeType.PC });
-
-        // Layer 3: Router 2 -> Switch 3
-        var switch3 = new NodeConfig { id = "Switch3", type = NodeType.Switch };
+        var switch3 = Node("Switch 3", NodeType.Switch);
         router2.children.Add(switch3);
 
-        // Layer 4: Switch 3 -> 8 PCs
-        for (int i = 10; i <= 17; i++)
-            switch3.children.Add(new NodeConfig { id = $"PC{i:D2}", type = NodeType.PC });
+        for (int i = 10; i <= 17; i++) switch3.children.Add(PC(i));
 
+        var config = ScriptableObject.CreateInstance<NetworkConfig>();
         config.root = internet;
         return config;
     }

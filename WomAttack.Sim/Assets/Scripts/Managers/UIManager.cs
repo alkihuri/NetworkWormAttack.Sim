@@ -6,6 +6,11 @@ public class UIManager : MonoBehaviour
     private Button actionButton;
     private Text buttonText;
 
+    private Text logText;
+    private const int MaxLines = 50;
+    private readonly System.Collections.Generic.Queue<string> logLines =
+        new System.Collections.Generic.Queue<string>();
+
     void Awake()
     {
         ServiceLocator.Register(this);
@@ -18,6 +23,29 @@ public class UIManager : MonoBehaviour
 
         actionButton.onClick.AddListener(OnButtonClick);
         SetButtonInteractable(false);
+    }
+
+    public void InitializeLog(Text text)
+    {
+        logText = text;
+    }
+
+    public void AppendLog(string message)
+    {
+        if (logLines.Count >= MaxLines)
+            logLines.Dequeue();
+
+        logLines.Enqueue(message);
+
+        if (logText != null)
+            logText.text = string.Join("\n", logLines);
+    }
+
+    public void ClearLog()
+    {
+        logLines.Clear();
+        if (logText != null)
+            logText.text = "";
     }
 
     private void OnButtonClick()

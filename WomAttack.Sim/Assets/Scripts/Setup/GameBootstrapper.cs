@@ -89,5 +89,74 @@ public class GameBootstrapper : MonoBehaviour
         // Initialize UIManager
         var uiManager = ServiceLocator.Get<UIManager>();
         uiManager.Initialize(button, text);
+
+        // ── Log Panel ─────────────────────────────────────────────────
+        // Background image
+        var logPanelObj = new GameObject("LogPanel");
+        logPanelObj.transform.SetParent(canvasObj.transform, false);
+
+        var logImage = logPanelObj.AddComponent<Image>();
+        logImage.color = new Color(0f, 0f, 0f, 0.6f);
+
+        var logPanelRect = logPanelObj.GetComponent<RectTransform>();
+        logPanelRect.anchorMin = new Vector2(0f, 0f);
+        logPanelRect.anchorMax = new Vector2(0f, 0f);
+        logPanelRect.pivot    = new Vector2(0f, 0f);
+        logPanelRect.anchoredPosition = new Vector2(20f, 20f);
+        logPanelRect.sizeDelta = new Vector2(360f, 200f);
+
+        // ScrollRect
+        var scrollObj = new GameObject("Scroll");
+        scrollObj.transform.SetParent(logPanelObj.transform, false);
+
+        var scrollRect = scrollObj.AddComponent<ScrollRect>();
+        scrollRect.horizontal = false;
+        scrollRect.vertical   = true;
+        scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+        scrollRect.movementType = ScrollRect.MovementType.Clamped;
+
+        var scrollRectTransform = scrollObj.GetComponent<RectTransform>();
+        scrollRectTransform.anchorMin = Vector2.zero;
+        scrollRectTransform.anchorMax = Vector2.one;
+        scrollRectTransform.offsetMin = new Vector2(6f,  6f);
+        scrollRectTransform.offsetMax = new Vector2(-6f, -6f);
+
+        // Content (Text container)
+        var contentObj = new GameObject("Content");
+        contentObj.transform.SetParent(scrollObj.transform, false);
+
+        var contentSizeFitter = contentObj.AddComponent<ContentSizeFitter>();
+        contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        var contentRect = contentObj.GetComponent<RectTransform>();
+        contentRect.anchorMin = new Vector2(0f, 1f);
+        contentRect.anchorMax = new Vector2(1f, 1f);
+        contentRect.pivot     = new Vector2(0f, 1f);
+        contentRect.anchoredPosition = Vector2.zero;
+        contentRect.sizeDelta = Vector2.zero;
+
+        // Log Text
+        var logTextObj = new GameObject("LogText");
+        logTextObj.transform.SetParent(contentObj.transform, false);
+
+        var logText = logTextObj.AddComponent<Text>();
+        logText.font      = font ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        logText.fontSize  = 14;
+        logText.color     = new Color(0.85f, 1f, 0.85f);
+        logText.alignment = TextAnchor.UpperLeft;
+        logText.text      = "";
+        logText.supportRichText = true;
+        logText.verticalOverflow   = VerticalWrapMode.Overflow;
+        logText.horizontalOverflow = HorizontalWrapMode.Wrap;
+
+        var logTextRect = logTextObj.GetComponent<RectTransform>();
+        logTextRect.anchorMin = Vector2.zero;
+        logTextRect.anchorMax = Vector2.one;
+        logTextRect.offsetMin = Vector2.zero;
+        logTextRect.offsetMax = Vector2.zero;
+
+        scrollRect.content = contentRect;
+
+        uiManager.InitializeLog(logText);
     }
 }
