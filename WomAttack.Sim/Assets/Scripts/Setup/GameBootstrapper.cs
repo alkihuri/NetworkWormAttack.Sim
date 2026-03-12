@@ -74,7 +74,8 @@ public class GameBootstrapper : MonoBehaviour
         var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         if (font == null)
             font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        text.font = font;
+        if (font != null)
+            text.font = font;
         text.fontSize = 24;
         text.alignment = TextAnchor.MiddleCenter;
         text.color = Color.white;

@@ -3,16 +3,21 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class ConnectionRenderer : MonoBehaviour
 {
+    private const float LINE_WIDTH = 0.05f;
+
     private LineRenderer lineRenderer;
 
     public void Initialize(Transform startTransform, Transform endTransform)
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
-        lineRenderer.startWidth = 0.05f;
-        lineRenderer.endWidth = 0.05f;
+        lineRenderer.startWidth = LINE_WIDTH;
+        lineRenderer.endWidth = LINE_WIDTH;
 
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        var shader = Shader.Find("Sprites/Default");
+        if (shader == null)
+            shader = Shader.Find("Standard");
+        lineRenderer.material = new Material(shader);
         lineRenderer.startColor = Color.white;
         lineRenderer.endColor = Color.white;
 

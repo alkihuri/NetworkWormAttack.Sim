@@ -107,7 +107,10 @@ public class NodeManager : MonoBehaviour
         var renderer = obj.GetComponent<Renderer>();
         if (renderer != null)
         {
-            renderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null)
+                shader = Shader.Find("Standard");
+            renderer.material = new Material(shader);
         }
 
         return obj;

@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class ScanManager : MonoBehaviour
 {
+    private const float POSITION_MATCH_THRESHOLD = 0.1f;
+
     void Awake()
     {
         ServiceLocator.Register(this);
@@ -72,7 +74,7 @@ public class ScanManager : MonoBehaviour
 
                 foreach (var node in layers[layerIndex])
                 {
-                    if (Vector3.Distance(endPos, node.transform.position) < 0.1f)
+                    if (Vector3.Distance(endPos, node.transform.position) < POSITION_MATCH_THRESHOLD)
                     {
                         connection.SetColor(pulseColor);
                     }
