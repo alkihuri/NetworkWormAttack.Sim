@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
     public class NetworkNodeController : MonoBehaviour, IColorable
@@ -12,10 +13,18 @@ using DG.Tweening;
         public NetworkNodeController parent;
 
         protected List<Renderer> nodeRenderers;
+        private Text labelText;
 
         protected virtual void Awake()
         {
             nodeRenderers = new List<Renderer>(GetComponentsInChildren<Renderer>());
+            labelText = GetComponentInChildren<Text>(true);
+        }
+
+        public void SetLabel(string value)
+        {
+            if (labelText != null)
+                labelText.text = value;
         }
 
         public virtual IEnumerator ChangeColor(NodeColor color)

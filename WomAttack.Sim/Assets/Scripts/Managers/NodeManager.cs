@@ -45,6 +45,7 @@ public class NodeManager : MonoBehaviour
         controller.id = config.id;
         controller.type = config.type;
         controller.parent = parentController;
+        controller.SetLabel(config.id);
 
         if (parentController != null)
             parentController.children.Add(controller);
