@@ -15,7 +15,6 @@ public class PropagationManager : MonoBehaviour
         var nodeManager = ServiceLocator.Get<NodeManager>();
         var allPCs = nodeManager.GetAllPCs();
 
-        // Collect color transitions before applying
         var transitions = new List<(NetworkNodeController node, NodeColor newColor)>();
 
         foreach (var pc in allPCs)
@@ -32,18 +31,19 @@ public class PropagationManager : MonoBehaviour
                     transitions.Add((pc, NodeColor.Black));
                     break;
                 case NodeColor.Black:
-                    // Already Black, no change
                     break;
             }
         }
 
-        // Apply transitions sequentially with animation
+        SimLog.Write($"Propagating worm to {transitions.Count} node(s)...");
+
         foreach (var (node, newColor) in transitions)
         {
+            SimLog.Write($"{node.id}: {node.currentColor} → {newColor}");
             yield return StartCoroutine(node.ChangeColor(newColor));
         }
 
-        // After propagation, check parent nodes for blackout
+        SimLog.Write("Checking parent nodes for full compromise...");
         yield return StartCoroutine(CheckAllParentNodes(nodeManager));
     }
 
@@ -51,7 +51,6 @@ public class PropagationManager : MonoBehaviour
     {
         var allNodes = nodeManager.GetAllNodes();
 
-        // Check from bottom up - find nodes whose children are all Black
         for (int i = allNodes.Count - 1; i >= 0; i--)
         {
             var node = allNodes[i];
@@ -63,6 +62,7 @@ public class PropagationManager : MonoBehaviour
 
             if (allChildrenBlack)
             {
+                SimLog.Write($"{node.id}: all children compromised — node taken over.");
                 yield return StartCoroutine(node.ChangeColor(NodeColor.Black));
             }
         }

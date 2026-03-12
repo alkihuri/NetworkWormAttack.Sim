@@ -17,10 +17,12 @@ public class ScanManager : MonoBehaviour
         var nodeManager = ServiceLocator.Get<NodeManager>();
 
         // Step 1: Highlight all PCs with golden color
+        SimLog.Write("Highlighting all endpoints for scan...");
         var pcs = nodeManager.GetAllPCs();
         yield return StartCoroutine(HighlightAllPCs(pcs));
 
         // Step 2: Pulse animation through network lines
+        SimLog.Write("Sending scan pulse through network lines...");
         yield return StartCoroutine(PulseNetworkLines(nodeManager));
 
         // Step 3: Find infected (Red) PC
@@ -31,7 +33,12 @@ public class ScanManager : MonoBehaviour
 
         if (infectedPC != null)
         {
+            SimLog.Write($"Infected node detected: {infectedPC.id}");
             yield return StartCoroutine(ShakeInfectedPC(infectedPC));
+        }
+        else
+        {
+            SimLog.Write("No infected node found.");
         }
     }
 

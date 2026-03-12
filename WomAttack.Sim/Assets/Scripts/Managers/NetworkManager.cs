@@ -16,12 +16,14 @@ public class NetworkManager : MonoBehaviour
     {
         var nodeManager = ServiceLocator.Get<NodeManager>();
 
+        SimLog.Write("Initializing network topology...");
         NetworkConfig config = NetworkConfigBuilder.BuildDefault();
         nodeManager.BuildNetwork(config);
 
         yield return StartCoroutine(nodeManager.AnimateTreeAppearance());
 
         nodeManager.RandomizePCColors();
+        SimLog.Write("Network ready. Awaiting operator command.");
 
         var uiManager = ServiceLocator.Get<UIManager>();
         uiManager.SetButtonText("SCAN");
@@ -52,9 +54,13 @@ public class NetworkManager : MonoBehaviour
         var uiManager = ServiceLocator.Get<UIManager>();
         uiManager.SetButtonInteractable(false);
 
+        SimLog.Write("--- PHASE: SCAN ---");
+        SimLog.Write("Scanning network for infected nodes...");
+
         var scanManager = ServiceLocator.Get<ScanManager>();
         yield return StartCoroutine(scanManager.ExecuteScan());
 
+        SimLog.Write("Scan complete. Infected node located.");
         currentPhase = SimulationPhase.Exploit;
         uiManager.SetButtonText("EXPLOIT");
         uiManager.SetButtonInteractable(true);
@@ -67,9 +73,13 @@ public class NetworkManager : MonoBehaviour
         var uiManager = ServiceLocator.Get<UIManager>();
         uiManager.SetButtonInteractable(false);
 
+        SimLog.Write("--- PHASE: EXPLOIT ---");
+        SimLog.Write("Exploiting vulnerability on infected node...");
+
         var exploitManager = ServiceLocator.Get<ExploitManager>();
         yield return StartCoroutine(exploitManager.ExecuteExploit());
 
+        SimLog.Write("Exploit complete. Propagation ready.");
         currentPhase = SimulationPhase.Propagate;
         uiManager.SetButtonText("PROPAGATE AND REPLICATE");
         uiManager.SetButtonInteractable(true);
@@ -82,18 +92,24 @@ public class NetworkManager : MonoBehaviour
         var uiManager = ServiceLocator.Get<UIManager>();
         uiManager.SetButtonInteractable(false);
 
+        SimLog.Write("--- PHASE: PROPAGATE ---");
+        SimLog.Write("Worm propagating through network...");
+
         var propagationManager = ServiceLocator.Get<PropagationManager>();
         yield return StartCoroutine(propagationManager.ExecutePropagate());
 
         var nodeManager = ServiceLocator.Get<NodeManager>();
         if (nodeManager.AreAllPCsBlack())
         {
+            SimLog.Write("All nodes compromised. Network fully infected.");
+            SimLog.Write("=== SIMULATION COMPLETE ===");
             simulationComplete = true;
             uiManager.SetButtonText("SIMULATION COMPLETE");
             uiManager.SetButtonInteractable(false);
         }
         else
         {
+            SimLog.Write("Propagation wave done. Restarting scan cycle.");
             currentPhase = SimulationPhase.Scan;
             uiManager.SetButtonText("SCAN");
             uiManager.SetButtonInteractable(true);
