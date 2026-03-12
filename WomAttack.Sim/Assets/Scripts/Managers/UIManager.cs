@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     private Text buttonText;
 
     private Text logText;
+    private ScrollRect logScrollRect;
     private const int MaxLines = 50;
     private readonly System.Collections.Generic.Queue<string> logLines =
         new System.Collections.Generic.Queue<string>();
@@ -20,14 +21,14 @@ public class UIManager : MonoBehaviour
     {
         actionButton = button;
         buttonText = text;
-
         actionButton.onClick.AddListener(OnButtonClick);
         SetButtonInteractable(false);
     }
 
-    public void InitializeLog(Text text)
+    public void InitializeLog(Text text, ScrollRect scrollRect)
     {
         logText = text;
+        logScrollRect = scrollRect;
     }
 
     public void AppendLog(string message)
@@ -39,6 +40,8 @@ public class UIManager : MonoBehaviour
 
         if (logText != null)
             logText.text = string.Join("\n", logLines);
+
+        ScrollToBottom();
     }
 
     public void ClearLog()
@@ -46,6 +49,13 @@ public class UIManager : MonoBehaviour
         logLines.Clear();
         if (logText != null)
             logText.text = "";
+    }
+
+    private void ScrollToBottom()
+    {
+        if (logScrollRect == null) return;
+        Canvas.ForceUpdateCanvases();
+        logScrollRect.verticalNormalizedPosition = 0f;
     }
 
     private void OnButtonClick()
@@ -57,16 +67,12 @@ public class UIManager : MonoBehaviour
     public void SetButtonText(string text)
     {
         if (buttonText != null)
-        {
             buttonText.text = text;
-        }
     }
 
     public void SetButtonInteractable(bool interactable)
     {
         if (actionButton != null)
-        {
             actionButton.interactable = interactable;
-        }
     }
 }

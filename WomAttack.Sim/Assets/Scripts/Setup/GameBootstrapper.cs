@@ -103,7 +103,7 @@ public class GameBootstrapper : MonoBehaviour
         logPanelRect.anchorMax = new Vector2(0f, 0f);
         logPanelRect.pivot    = new Vector2(0f, 0f);
         logPanelRect.anchoredPosition = new Vector2(20f, 20f);
-        logPanelRect.sizeDelta = new Vector2(360f, 200f);
+        logPanelRect.sizeDelta = new Vector2(360f, 800);
 
         // ScrollRect
         var scrollObj = new GameObject("Scroll");
@@ -157,6 +157,6 @@ public class GameBootstrapper : MonoBehaviour
 
         scrollRect.content = contentRect;
 
-        uiManager.InitializeLog(logText);
+        uiManager.InitializeLog(logText, scrollRect);
     }
 }
