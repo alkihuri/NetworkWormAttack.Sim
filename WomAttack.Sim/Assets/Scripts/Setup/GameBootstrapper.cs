@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class GameBootstrapper : MonoBehaviour
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Bootstrap()
     {
         var bootstrapper = new GameObject("[GameBootstrapper]");
@@ -71,7 +71,10 @@ public class GameBootstrapper : MonoBehaviour
 
         var text = textObj.AddComponent<Text>();
         text.text = "SCAN";
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        if (font == null)
+            font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        text.font = font;
         text.fontSize = 24;
         text.alignment = TextAnchor.MiddleCenter;
         text.color = Color.white;

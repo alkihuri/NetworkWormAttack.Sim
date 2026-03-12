@@ -36,17 +36,19 @@ public class ScanManager : MonoBehaviour
     private IEnumerator HighlightAllPCs(List<NetworkNodeController> pcs)
     {
         Color goldColor = new Color(1f, 0.84f, 0f);
+        Tween lastTween = null;
 
         foreach (var pc in pcs)
         {
             var renderer = pc.GetComponentInChildren<Renderer>();
             if (renderer != null)
             {
-                renderer.material.DOColor(goldColor, 0.3f);
+                lastTween = renderer.material.DOColor(goldColor, 0.3f);
             }
         }
 
-        yield return new WaitForSeconds(0.5f);
+        if (lastTween != null)
+            yield return lastTween.WaitForCompletion();
     }
 
     private IEnumerator PulseNetworkLines(NodeManager nodeManager)
@@ -91,22 +93,24 @@ public class ScanManager : MonoBehaviour
 
     private IEnumerator RestorePCColors(List<NetworkNodeController> pcs)
     {
+        Tween lastTween = null;
+
         foreach (var pc in pcs)
         {
             Color originalColor = NetworkNodeController.GetUnityColor(pc.currentColor);
             var renderer = pc.GetComponentInChildren<Renderer>();
             if (renderer != null)
             {
-                renderer.material.DOColor(originalColor, 0.3f);
+                lastTween = renderer.material.DOColor(originalColor, 0.3f);
             }
         }
 
-        yield return new WaitForSeconds(0.4f);
+        if (lastTween != null)
+            yield return lastTween.WaitForCompletion();
     }
 
     private IEnumerator ShakeInfectedPC(NetworkNodeController infectedPC)
     {
-        infectedPC.transform.DOShakeScale(1f, 0.3f, 10, 90f);
-        yield return new WaitForSeconds(1.2f);
+        yield return infectedPC.transform.DOShakeScale(1f, 0.3f, 10, 90f).WaitForCompletion();
     }
 }

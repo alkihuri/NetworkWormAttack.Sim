@@ -25,10 +25,8 @@ public class NetworkNodeController : MonoBehaviour, IColorable
 
         if (nodeRenderer != null && nodeRenderer.material != null)
         {
-            nodeRenderer.material.DOColor(targetColor, 0.5f);
+            yield return nodeRenderer.material.DOColor(targetColor, 0.5f).WaitForCompletion();
         }
-
-        yield return new WaitForSeconds(0.5f);
     }
 
     public void SetColorImmediate(NodeColor color)

@@ -171,14 +171,16 @@ public class NodeManager : MonoBehaviour
         for (int layerIndex = 0; layerIndex < layers.Count; layerIndex++)
         {
             var layer = layers[layerIndex];
+            Tween lastTween = null;
 
             foreach (var node in layer)
             {
                 Vector3 targetScale = GetTargetScale(node.type);
-                node.transform.DOScale(targetScale, 0.5f).SetEase(Ease.OutBack);
+                lastTween = node.transform.DOScale(targetScale, 0.5f).SetEase(Ease.OutBack);
             }
 
-            yield return new WaitForSeconds(0.6f);
+            if (lastTween != null)
+                yield return lastTween.WaitForCompletion();
         }
     }
 
