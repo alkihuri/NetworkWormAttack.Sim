@@ -240,9 +240,9 @@ public class NodeManager : MonoBehaviour
         return rootNode;
     }
 
-    public NetworkNodeController FindInfectedPC()
+    public List<NetworkNodeController> FindInfectedPCs()
     {
-        return allNodes.FirstOrDefault(n => n.type == NodeType.PC && n.currentColor == NodeColor.Red);
+        return allNodes.Where(n => n.type == NodeType.PC && n.currentColor == NodeColor.Red).ToList();
     }
 
     public bool AreAllPCsBlack()

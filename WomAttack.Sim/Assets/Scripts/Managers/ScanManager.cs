@@ -24,21 +24,26 @@ public class ScanManager : MonoBehaviour
         // Step 2: Pulse animation through network lines
         SimLog.Write("Sending scan pulse through network lines...");
         yield return StartCoroutine(PulseNetworkLines(nodeManager));
+ 
+        // Step 3: Find infected (Red) PCs
+        var infectedPCs = nodeManager.FindInfectedPCs();
 
-        // Step 3: Find infected (Red) PC
-        var infectedPC = nodeManager.FindInfectedPC();
-
-        // Step 4: Restore PC colors and shake infected PC
+        // Step 4: Restore PC colors and shake infected PCs
         yield return StartCoroutine(RestorePCColors(pcs));
 
-        if (infectedPC != null)
+        if (infectedPCs != null && infectedPCs.Count > 0)
         {
-            SimLog.Write($"Infected node detected: {infectedPC.id}");
-            yield return StartCoroutine(ShakeInfectedPC(infectedPC));
+            foreach (var infectedPC in infectedPCs)
+            {
+                if (infectedPC == null) continue;
+
+                SimLog.Write($"Infected node detected: {infectedPC.id}");
+                yield return StartCoroutine(ShakeInfectedPC(infectedPC));
+            }
         }
         else
         {
-            SimLog.Write("No infected node found.");
+            SimLog.Write("No infected nodes found.");
         }
     }
 
