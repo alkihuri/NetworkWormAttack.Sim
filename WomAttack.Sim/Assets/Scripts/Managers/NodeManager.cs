@@ -245,6 +245,11 @@ public class NodeManager : MonoBehaviour
         return allNodes.FirstOrDefault(n => n.type == NodeType.PC && n.currentColor == NodeColor.Red);
     }
 
+    public List<NetworkNodeController> FindAllInfectedPCs()
+    {
+        return allNodes.Where(n => n.type == NodeType.PC && n.currentColor == NodeColor.Red).ToList();
+    }
+
     public bool AreAllPCsBlack()
     {
         return GetAllPCs().All(pc => pc.currentColor == NodeColor.Black);
