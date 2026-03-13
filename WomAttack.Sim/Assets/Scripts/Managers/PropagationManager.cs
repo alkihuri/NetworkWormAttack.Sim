@@ -28,8 +28,6 @@ public class PropagationManager : MonoBehaviour
                     transitions.Add((pc, NodeColor.Red));
                     break;
                 case NodeColor.Red:
-                    transitions.Add((pc, NodeColor.Black));
-                    break;
                 case NodeColor.Black:
                     break;
             }
