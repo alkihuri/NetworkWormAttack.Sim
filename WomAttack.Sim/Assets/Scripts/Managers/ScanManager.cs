@@ -36,10 +36,6 @@ public class ScanManager : MonoBehaviour
             foreach (var infectedPC in infectedPCs)
             {
                 SimLog.Write($"Infected node detected: {infectedPC.id}");
-            }
-
-            foreach (var infectedPC in infectedPCs)
-            {
                 yield return StartCoroutine(ShakeInfectedPC(infectedPC));
             }
         }

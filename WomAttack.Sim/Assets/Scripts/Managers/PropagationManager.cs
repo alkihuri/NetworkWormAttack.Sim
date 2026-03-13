@@ -29,6 +29,7 @@ public class PropagationManager : MonoBehaviour
                     break;
                 case NodeColor.Red:
                 case NodeColor.Black:
+                    // Red and black nodes are not affected by propagation
                     break;
             }
         }
